@@ -72,7 +72,7 @@ public class Meal {
 		Meal item = new Meal();
 		
 		for (int i = 0; i < meal.size(); i++) {
-			item.meal.add(meal.get(i));
+			item.meal.add(meal.get(i).clone());
 		}
 		item.totalCost = totalCost;
 		item.totalNutrition = totalNutrition.clone();

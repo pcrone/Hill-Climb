@@ -1,5 +1,5 @@
 public class HillClimb {
-	public Meal initialMeal;
+	public Meal finalMeal;
 
 	public Meal findInitialMeal() {
 		FoodMenu menu = new FoodMenu();
@@ -87,21 +87,21 @@ public class HillClimb {
 	
 	public static void main(String[] args) {		
 		HillClimb climb = new HillClimb();
-
-		climb.initialMeal = climb.runRepeatHillClimb();
+/*
+		climb.finalMeal = climb.runRepeatHillClimb();
 		
 		// Output Initial Random Node
-		System.out.println(climb.initialMeal.meal.size() + "\n" + climb.initialMeal.totalCost);
-		for (int i = 0; i < climb.initialMeal.totalNutrition.length; i++)
-			System.out.print(climb.initialMeal.totalNutrition[i] + " ");
-
+		System.out.println(climb.finalMeal.meal.size() + "\n" + climb.finalMeal.totalCost);
+		for (int i = 0; i < climb.finalMeal.totalNutrition.length; i++)
+			System.out.print(climb.finalMeal.totalNutrition[i] + " ");
+*/
 		SimulatedAnnealing sim = new SimulatedAnnealing();
-		climb.initialMeal = sim.runSimulatedAnnealing();
+		climb.finalMeal = sim.runSimulatedAnnealing();
 		
 		// Output Initial Random Node
-		System.out.println(climb.initialMeal.meal.size() + "\n" + climb.initialMeal.totalCost);
-		for (int i = 0; i < climb.initialMeal.totalNutrition.length; i++)
-			System.out.print(climb.initialMeal.totalNutrition[i] + " ");
+		System.out.println(climb.finalMeal.meal.size() + "\n" + climb.finalMeal.totalCost);
+		for (int i = 0; i < climb.finalMeal.totalNutrition.length; i++)
+			System.out.print(climb.finalMeal.totalNutrition[i] + " ");
 	
 	}
 	

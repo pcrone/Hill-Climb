@@ -27,6 +27,6 @@ public class FoodMenu {
 	}
 	
 	public FoodItem getRandomItem() {
-		return menu.get((int)(Math.random() * (menu.size()-1)) );
+		return menu.get((int)(Math.random() * menu.size()) );
 	}	
 }

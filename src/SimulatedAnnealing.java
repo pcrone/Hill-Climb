@@ -1,8 +1,6 @@
-import java.util.*;
-
 public class SimulatedAnnealing {
-	private final int STARTING_TEMP = 100;
-	private final double DELTA_T = 0.007;
+	private final int STARTING_TEMP = 20;
+	private final double DELTA_T = 0.95;
 	
 	private double temperature;
 	
@@ -27,30 +25,24 @@ public class SimulatedAnnealing {
 		FoodMenu menu = new FoodMenu();
 		Meal tempMeal = meal.clone();
 		
-		ArrayList<Meal> nextMeals = new ArrayList<Meal>();
-		for (int i = 0; i < tempMeal.meal.size(); i++) {
-				for (int j = 0; j < menu.menu.size(); j++) {
-					if (tempMeal.replaceFood(menu.menu.get(j), i) && (tempMeal.totalCost - meal.totalCost) != 0)
-						nextMeals.add(tempMeal);
-					
-					tempMeal = meal.clone();
-				}
-				
-				if (tempMeal.removeFood(i) && (tempMeal.totalCost - meal.totalCost) != 0)
-					nextMeals.add(tempMeal);
-				
-				tempMeal = meal.clone();
-		}
+		FoodItem randomItem;
+		int randomChange;
+		int randomIndex;
 		
-		for (int i = 0; i < menu.menu.size(); i++) {
-			if (tempMeal.addFood(menu.menu.get(i)) && (tempMeal.totalCost - meal.totalCost) != 0)
-				nextMeals.add(tempMeal);
-			
+		while (tempMeal.totalCost == meal.totalCost) {
 			tempMeal = meal.clone();
+			randomItem = menu.menu.get((int)(Math.random()*menu.menu.size()) );
+			randomIndex = (int)(Math.random()*tempMeal.meal.size());
+			randomChange = (int)(Math.random()*3);
+			
+			switch (randomChange) {
+				case 0: tempMeal.replaceFood(randomItem, randomIndex);
+					break;
+				case 1: tempMeal.addFood(randomItem);
+					break;
+				case 2: tempMeal.removeFood(randomIndex);
+			}
 		}
-		
-		int randomIndex = (int)(Math.random()*(nextMeals.size()-1));
-		tempMeal = nextMeals.get(randomIndex);
 		
 		return tempMeal;
 	}
@@ -61,25 +53,25 @@ public class SimulatedAnnealing {
 		temperature = STARTING_TEMP;
 		int delta_e;
 		double probability;
-		int time = 0;
 		
-		while (temperature > DELTA_T) {
-		//	if (time % 75 == 0) {
-				temperature -= DELTA_T;
-				System.out.println(temperature);
-		//	}	
-			time++;
+		while (temperature > 0) {
+			temperature *= DELTA_T;
+			System.out.println(temperature);
 			
 			nextNode = findRandomNode(currentNode);
 			
 			delta_e = currentNode.totalCost - nextNode.totalCost;
 			
-			if (delta_e > 0)
+			if (delta_e > 0) {
 				currentNode = nextNode;
+//				System.out.println("uphill" + " = " + currentNode.totalCost);
+			}
 			else {
 				probability = Math.exp(delta_e/temperature);
-				if (Math.random() < probability)
+				if (Math.random() < probability) {
 					currentNode = nextNode;
+//					System.out.println("downhill" + " = " + currentNode.totalCost);
+				}
 			}
 		}
 		return currentNode;
