@@ -1,11 +1,11 @@
 public class FoodItem {
-	String name = "";
+	int itemNumber;
 	int[] dailyNutrition = {0,0,0,0,0};
 	int cost = 0;
 	
 	public FoodItem() {};
 	
-	public FoodItem(String name,
+	public FoodItem(int itemNumber,
 			int carb, 
 			int protein, 
 			int fat, 
@@ -13,7 +13,7 @@ public class FoodItem {
 			int mineral, 
 			int cost) {
 		
-		this.name = name;
+		this.itemNumber = itemNumber;
 		dailyNutrition = new int[]{carb, protein, fat, vitamin, mineral};
 		this.cost = cost;			
 	}
@@ -21,7 +21,7 @@ public class FoodItem {
 	public FoodItem clone() {
 		FoodItem item = new FoodItem();
 		
-		item.name = name;
+		item.itemNumber = itemNumber;
 		item.dailyNutrition = dailyNutrition.clone();
 		item.cost = cost;
 		

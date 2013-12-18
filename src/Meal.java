@@ -2,21 +2,19 @@ import java.util.ArrayList;
 
 public class Meal {
 	ArrayList<FoodItem> meal = new ArrayList<FoodItem>();
+	int[] state = new int[20];
 	int totalCost = 0;
 	int[] totalNutrition = {0,0,0,0,0};
-
+	
 	public boolean addFood(FoodItem item) {
 		int[] tempNutrition = totalNutrition.clone();
 		
-		for (int i = 0; i < tempNutrition.length; i++) {
-			if (tempNutrition[i] + item.dailyNutrition[i] > 100)
-				return false;
-			
+		for (int i = 0; i < tempNutrition.length; i++)
 			tempNutrition[i] += item.dailyNutrition[i];
-		}
-		
+
 		totalNutrition = tempNutrition;
 		totalCost += item.cost;
+		state[item.itemNumber-1]++;
 		meal.add(item);
 		
 		return true;
@@ -25,15 +23,12 @@ public class Meal {
 	public boolean removeFood(int index) {
 		int[] tempNutrition = totalNutrition.clone();
 		
-		for (int i = 0; i < tempNutrition.length; i++) {
+		for (int i = 0; i < tempNutrition.length; i++)
 			tempNutrition[i] -= meal.get(index).dailyNutrition[i];
-			
-			if (tempNutrition[i] < 95)
-				return false;
-		}
 		
 		totalNutrition = tempNutrition;
 		totalCost -= meal.get(index).cost;
+		state[meal.get(index).itemNumber-1]--;
 		meal.remove(index);
 		
 		return true;
@@ -66,6 +61,20 @@ public class Meal {
 				return false;
 		return true;
 	}
+	
+	public boolean greaterThan100() {
+		for (int i = 0; i < totalNutrition.length; i++)
+			if (totalNutrition[i] < 100)
+				return false;
+		return true;
+	}
+	
+	public boolean lessThan95() {
+		for (int i = 0; i < totalNutrition.length; i++)
+			if (totalNutrition[i] < 95)
+				return true;
+		return false;
+	}
 
 	@Override
 	public Meal clone() {
@@ -75,8 +84,23 @@ public class Meal {
 			item.meal.add(meal.get(i).clone());
 		}
 		item.totalCost = totalCost;
+		item.state = state.clone();
 		item.totalNutrition = totalNutrition.clone();
 		
 		return item;
-	}	
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj.getClass() == Meal.class) {
+			for (int i = 0; i < state.length; i++) {
+				if (state[i] != ((Meal)obj).state[i])
+					return false;
+			}
+			return true;
+		}
+		return super.equals(obj);
+	}
+	
+	
 }

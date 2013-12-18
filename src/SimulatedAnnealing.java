@@ -1,8 +1,11 @@
+import java.util.ArrayList;
+
 public class SimulatedAnnealing {
-	private final int STARTING_TEMP = 20;
+	private final int STARTING_TEMP = 15;
 	private final double DELTA_T = 0.95;
 	
 	private double temperature;
+	ArrayList<Meal> explored = new ArrayList<Meal>();
 	
 	private Meal findInitialMeal() {
 		FoodMenu menu = new FoodMenu();
@@ -11,7 +14,10 @@ public class SimulatedAnnealing {
 		boolean isInitialState = false;
 		
 		while (!isInitialState) {
-			if (!initialNode.addFood(menu.getRandomItem()))
+			initialNode.addFood(menu.getRandomItem());
+			
+			// If outside range, start over
+			if (initialNode.greaterThan100())
 				initialNode = new Meal();		
 			
 			if (initialNode.withinRange())
@@ -29,18 +35,20 @@ public class SimulatedAnnealing {
 		int randomChange;
 		int randomIndex;
 		
-		while (tempMeal.totalCost == meal.totalCost) {
+		while (tempMeal.lessThan95() || explored.contains(tempMeal)) {
 			tempMeal = meal.clone();
-			randomItem = menu.menu.get((int)(Math.random()*menu.menu.size()) );
-			randomIndex = (int)(Math.random()*tempMeal.meal.size());
-			randomChange = (int)(Math.random()*3);
+			randomChange = (int)(Math.random()*2);
 			
 			switch (randomChange) {
-				case 0: tempMeal.replaceFood(randomItem, randomIndex);
+				// Add a random food item
+				case 0: 
+					randomItem = menu.menu.get((int)(Math.random()*menu.menu.size()) );
+					tempMeal.addFood(randomItem);
 					break;
-				case 1: tempMeal.addFood(randomItem);
-					break;
-				case 2: tempMeal.removeFood(randomIndex);
+				// Remove a random food item
+				case 1:
+					randomIndex = (int)(Math.random()*tempMeal.meal.size());
+					tempMeal.removeFood(randomIndex);
 			}
 		}
 		
@@ -53,10 +61,16 @@ public class SimulatedAnnealing {
 		temperature = STARTING_TEMP;
 		int delta_e;
 		double probability;
+		explored.add(currentNode);
 		
-		while (temperature > 0) {
-			temperature *= DELTA_T;
-			System.out.println(temperature);
+		while (true) {
+			temperature -= 0.001;
+			if (temperature <= 0)
+				return currentNode;
+//			System.out.println(temperature);
+
+			if (!explored.contains(currentNode))
+				explored.add(currentNode);
 			
 			nextNode = findRandomNode(currentNode);
 			
@@ -74,6 +88,5 @@ public class SimulatedAnnealing {
 				}
 			}
 		}
-		return currentNode;
 	}
 }
