@@ -28,7 +28,7 @@ public class Meal {
 		
 		totalNutrition = tempNutrition;
 		totalCost -= meal.get(index).cost;
-		state[meal.get(index).itemNumber-1]--;
+		state[(meal.get(index).itemNumber)-1]--;
 		meal.remove(index);
 		
 		return true;
@@ -100,7 +100,5 @@ public class Meal {
 			return true;
 		}
 		return super.equals(obj);
-	}
-	
-	
+	}	
 }
